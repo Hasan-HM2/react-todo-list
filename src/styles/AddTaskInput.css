@@ -1,0 +1,20 @@
+button {
+  border: none;
+  height: 55.97px;
+  background-color: rgb(13, 187, 13);
+  cursor: pointer;
+  font-size: 23px;
+  color: aquamarine;
+  width: 15ch;
+  border-radius: 8px;
+  transition: .3s;
+}
+
+button:hover {
+  background-color: rgb(10, 133, 10);
+  color: rgb(255, 255, 255);
+}
+
+#outlined-basic {
+  width: 30ch;
+}

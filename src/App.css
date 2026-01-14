@@ -59,7 +59,6 @@ hr {
 .link {
   text-decoration: none;
 }
-
-.link:visited {
-  background-color: #282c34;
+.nav-item {
+  font-size: 222px;
 }

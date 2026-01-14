@@ -28,18 +28,18 @@ export default function NavBar() {
           className="nav"
           direction="row"
           divider={<Divider orientation="vertical" flexItem />}
-          spacing={2}
+          spacing={1}
         >
           <Link className="link">
-            <Item>غير منجز</Item>
+            <Item sx={{ fontSize: "18px" }}>غير منجز</Item>
           </Link>
 
           <Link className="link">
-            <Item>منجز</Item>
+            <Item sx={{ fontSize: "18px" }}>منجز</Item>
           </Link>
 
           <Link className="link">
-            <Item>الكل</Item>
+            <Item sx={{ fontSize: "18px" }}>الكل</Item>
           </Link>
         </Stack>
       </div>
