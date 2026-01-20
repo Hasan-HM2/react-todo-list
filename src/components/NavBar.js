@@ -30,16 +30,16 @@ export default function NavBar() {
           divider={<Divider orientation="vertical" flexItem />}
           spacing={1}
         >
-          <Link className="link">
-            <Item sx={{ fontSize: "18px" }}>غير منجز</Item>
+          <Link className="link" to="/">
+            <Item sx={{ fontSize: "18px" }} className="navItemText">غير منجز</Item>
           </Link>
 
-          <Link className="link">
-            <Item sx={{ fontSize: "18px" }}>منجز</Item>
+          <Link className="link" to="">
+            <Item sx={{ fontSize: "18px" }} className="navItemText">منجز</Item>
           </Link>
 
-          <Link className="link">
-            <Item sx={{ fontSize: "18px" }}>الكل</Item>
+          <Link className="link" to="">
+            <Item sx={{ fontSize: "18px" }} className="navItemText">الكل</Item>
           </Link>
         </Stack>
       </div>

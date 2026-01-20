@@ -1,4 +1,8 @@
-button {
+.boxInput {
+  margin-top: 20px;
+}
+
+.addButton {
   border: none;
   height: 55.97px;
   background-color: rgb(13, 187, 13);
@@ -8,6 +12,7 @@ button {
   width: 15ch;
   border-radius: 8px;
   transition: .3s;
+  font-family: Tajwal !important;
 }
 
 button:hover {
