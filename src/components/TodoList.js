@@ -26,11 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function TodoList() {
   const { todos, setTodos } = useContext(TodosConetext)
-
   const [addTaskTitle, setAddTaskTitle] = useState("");
-
-
-
 
   let todo = todos.map((item) => {
     return (
