@@ -5,16 +5,13 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-
 import { useState } from "react";
 import TodoCard from "./TodoCard.js";
-
-// DATA
-import { initTodos } from "../todosData";
-
+import { v4 as uuidv4 } from "uuid";
+import { useContext } from "react";
+import { TodosConetext } from "../context/todosContext.js";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -28,21 +25,37 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function TodoList() {
-  const [todos, setTodos] = useState(initTodos);
+  const { todos, setTodos } = useContext(TodosConetext)
+
   const [addTaskTitle, setAddTaskTitle] = useState("");
+
+
+
 
   let todo = todos.map((item) => {
     return (
-      <TodoCard
-        key={item.id}
-        title={item.title}
-        details={item.details}
-        isComplete={item.isCompleted}
-      />
+      <TodoCard key={item.id} todo={item} />
     );
   });
+
+  // Handle Click Add Button
+  function handleClickAddButton() {
+    let newTodo = {
+      id: uuidv4(),
+      title: addTaskTitle,
+      details: "",
+      isCompleted: false,
+    };
+
+    setTodos([...todos, newTodo]);
+    setAddTaskTitle("");
+  }
+  // ==== Handle Click Add Button ====
+
+
   return (
     <>
+      {/* NAV BAR */}
       <div className="div-title">
         <h1>مهامي</h1>
         <hr />
@@ -73,9 +86,13 @@ export default function TodoList() {
           </Link>
         </Stack>
       </div>
+      {/* ===== NAV BAR ===== */}
 
+      {/* TODOS */}
       <div>{todo}</div>
+      {/* ===== TODOS ===== */}
 
+      {/* INPUT + ADD BUTTON BOX */}
       <Box
         component="form"
         sx={{ "& > :not(style)": { m: 1 }, direction: "rtl" }}
@@ -96,15 +113,11 @@ export default function TodoList() {
           }}
         />
 
-        <button
-          onClick={() => {
-            alert("test");
-          }}
-          className="addButton"
-        >
+        <button onClick={handleClickAddButton} className="addButton">
           إضافة
         </button>
       </Box>
+      {/* ===== INPUT + ADD BUTTON BOX ===== */}
     </>
   );
 }

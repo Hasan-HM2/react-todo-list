@@ -6,8 +6,28 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import { useState } from "react";
 
-const TodoCard = ({ title, details, isComplete }) => {
-  const [completeStatus, setCompleteStatue] = useState(isComplete);
+import { useContext } from "react";
+import { TodosConetext } from "../context/todosContext.js";
+
+
+const TodoCard = ({ todo, handleCheck }) => {
+  const { todos, setTodos } = useContext(TodosConetext)
+  const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
+  function handleDelete(id) { }
+
+  // HANDLE CHECK CLICK FUNCTION
+  function handleCheckClick() {
+    const updatedTodos = todos.map((item) => {
+      if (item.id === todo.id) {
+        item.isCompleted = !item.isCompleted
+      }
+      return item
+    })
+    setTodos(updatedTodos)
+  }
+  // ==== HANDLE CHECK CLICK FUNCTION ====
+
+
   return (
     <div className="task-card-container">
       <div className="one-card">
@@ -26,6 +46,7 @@ const TodoCard = ({ title, details, isComplete }) => {
                 background: "white",
                 border: "solid #78290f 2px",
               }}
+              onClick={handleDelete}
             >
               <DeleteIcon />
             </IconButton>
@@ -42,9 +63,11 @@ const TodoCard = ({ title, details, isComplete }) => {
               <EditIcon />
             </IconButton>
 
+            {/* CHECK ICON BUTTON */}
             <IconButton
               onClick={() => {
-                setCompleteStatue((prev) => !prev);
+                handleCheckClick()
+                setCompleteStatue(prev => !prev)
               }}
               className="iconButton"
               aria-label="delete"
@@ -56,6 +79,7 @@ const TodoCard = ({ title, details, isComplete }) => {
             >
               <CheckIcon />
             </IconButton>
+            {/* ==== CHECK ICON BUTTON ==== */}
           </Grid>
 
           <Grid size={8} className="right">
@@ -66,7 +90,7 @@ const TodoCard = ({ title, details, isComplete }) => {
                 fontSize: "28px",
               }}
             >
-              {title}
+              {todo.title}
             </h2>
             <h5
               style={{
@@ -75,7 +99,7 @@ const TodoCard = ({ title, details, isComplete }) => {
                 fontWeight: "normal",
               }}
             >
-              {details}
+              {todo.details}
             </h5>
           </Grid>
         </Grid>
