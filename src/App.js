@@ -25,9 +25,6 @@ function App() {
             <TodoList />
           </TodosConetext.Provider>
         </Container>
-        <Routes>
-          <Route path="" />
-        </Routes>
       </div>
     </ThemeProvider>
   );

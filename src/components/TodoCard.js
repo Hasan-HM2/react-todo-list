@@ -9,11 +9,39 @@ import { useState } from "react";
 import { useContext } from "react";
 import { TodosConetext } from "../context/todosContext.js";
 
+// MODAL
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
-const TodoCard = ({ todo, handleCheck }) => {
+
+const TodoCard = ({ todo }) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const { todos, setTodos } = useContext(TodosConetext)
   const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
-  function handleDelete(id) { }
+
+  // DELETE FUNCTION
+  function handleDeleteConfirm(id) {
+    let newTodos = todos.filter((item) => {
+      return item.id != todo.id
+    })
+    setTodos(newTodos)
+  }
+  // ==== DELETE FUNCTION ====
+
 
   // HANDLE CHECK CLICK FUNCTION
   function handleCheckClick() {
@@ -27,9 +55,35 @@ const TodoCard = ({ todo, handleCheck }) => {
   }
   // ==== HANDLE CHECK CLICK FUNCTION ====
 
-
   return (
     <div className="task-card-container">
+
+      {/* TODO MODAL */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        style={{ direction: 'rtl' }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"هل تريد الحذف بالتأكيد؟"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            لا يمكنك التراجع في حال تم تأكيد الحذف
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>إلغاء</Button>
+          <Button onClick={() => { handleDeleteConfirm(todo.id) }} autoFocus>
+            تأكيد الحذف
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* ==== TODO MODAL ==== */}
+
+
       <div className="one-card">
         <Grid container spacing={0}>
           <Grid
@@ -38,6 +92,8 @@ const TodoCard = ({ todo, handleCheck }) => {
             justifyContent="space-around"
             alignItems={"center"}
           >
+
+            {/* DELETE BUTTON */}
             <IconButton
               className="iconButton"
               aria-label="delete"
@@ -46,10 +102,11 @@ const TodoCard = ({ todo, handleCheck }) => {
                 background: "white",
                 border: "solid #78290f 2px",
               }}
-              onClick={handleDelete}
+              onClick={handleClickOpen}
             >
               <DeleteIcon />
             </IconButton>
+            {/* ==== DELETE BUTTON ==== */}
 
             <IconButton
               className="iconButton"
