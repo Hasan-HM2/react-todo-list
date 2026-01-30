@@ -9,6 +9,8 @@ import { useState } from "react";
 import { useContext } from "react";
 import { TodosConetext } from "../context/todosContext.js";
 
+import Container from "@mui/material/Container";
+
 // MODAL
 import * as React from 'react';
 import Button from '@mui/material/Button';
@@ -17,21 +19,41 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import TextField from '@mui/material/TextField';
 
 const TodoCard = ({ todo }) => {
   const [open, setOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
+  const [editedTodo, setEditedTodo] = useState({ title: todo.title, details: todo.details })
+
+  const { todos, setTodos } = useContext(TodosConetext)
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleClickOpenEdit = () => {
+    setOpenEdit(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const { todos, setTodos } = useContext(TodosConetext)
-  const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const formJson = Object.fromEntries(formData.entries());
+    const email = formJson.email;
+    console.log(email);
+    handleClose();
+  };
+
 
   // DELETE FUNCTION
   function handleDeleteConfirm(id) {
@@ -55,10 +77,24 @@ const TodoCard = ({ todo }) => {
   }
   // ==== HANDLE CHECK CLICK FUNCTION ====
 
+  // HANDLE EDIT CONFIRM
+  function handleEditConfirm() {
+    const updatedTodos = todos.map((item) => {
+      if (item.id === todo.id) {
+        return (
+          { ...item, title: editedTodo.title, details: editedTodo.details }
+        )
+      } else return item
+    })
+    setTodos(updatedTodos)
+    setOpenEdit(false)
+  }
+  // ==== HANDLE EDIT CONFIRM ====
+
   return (
     <div className="task-card-container">
 
-      {/* TODO MODAL */}
+      {/* DELETE TODO MODAL */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -75,14 +111,57 @@ const TodoCard = ({ todo }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>إلغاء</Button>
-          <Button onClick={() => { handleDeleteConfirm(todo.id) }} autoFocus>
+          <Button onClick={handleClose} className="cancelDeleteBtn">إلغاء</Button>
+          <Button onClick={() => { handleDeleteConfirm(todo.id) }} className="confirmDeleteBtn">
             تأكيد الحذف
           </Button>
         </DialogActions>
       </Dialog>
-      {/* ==== TODO MODAL ==== */}
+      {/* ==== DELETE TODO MODAL ==== */}
 
+
+      {/* EDIT TODO MODAL */}
+      <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth sx={{ direction: 'rtl' }}>
+        <DialogTitle sx={{ fontSize: '28px', marginBottom: '-16px' }}>تعديل عنوان المهمة</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit} id="subscription-form">
+            <TextField
+              autoFocus
+              required
+              id="name"
+              name="text"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={editedTodo.title}
+              onChange={(e) => { setEditedTodo({ ...editedTodo, title: e.target.value }) }}
+            />
+          </form>
+        </DialogContent>
+        <DialogTitle sx={{ marginBottom: '-16px', marginTop: '20px', }}>تعديل تفاصيل المهمة</DialogTitle>
+        <DialogContent sx={{ marginTop: '0px' }}>
+          <form onSubmit={handleSubmit} id="subscription-form">
+            <TextField
+              required
+              id="name"
+              name="text"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={editedTodo.details}
+              onChange={(e) => { setEditedTodo({ ...editedTodo, details: e.target.value }) }}
+            />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEdit} variant="outlined" sx={{ marginLeft: '20px' }} className="cancelEditBtn">إلغاء</Button>
+          <Button autoFocus variant="contained" className="confirmEditBtn" onClick={handleEditConfirm}>
+            حفظ التعديل
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* ===== EDIT TODO MODAL ==== */}
 
       <div className="one-card">
         <Grid container spacing={0}>
@@ -108,7 +187,9 @@ const TodoCard = ({ todo }) => {
             </IconButton>
             {/* ==== DELETE BUTTON ==== */}
 
+            {/* EDIT BUTTON */}
             <IconButton
+              onClick={handleClickOpenEdit}
               className="iconButton"
               aria-label="delete"
               style={{
@@ -119,6 +200,7 @@ const TodoCard = ({ todo }) => {
             >
               <EditIcon />
             </IconButton>
+            {/* ==== EDIT BUTTON ==== */}
 
             {/* CHECK ICON BUTTON */}
             <IconButton

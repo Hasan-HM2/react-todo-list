@@ -100,6 +100,7 @@ export default function TodoList() {
         }}
       >
         <TextField
+          required={true}
           id="outlined-basic"
           label="عنوان المهمة"
           variant="outlined"

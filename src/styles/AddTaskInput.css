@@ -15,7 +15,7 @@
   font-family: Tajwal !important;
 }
 
-button:hover {
+.addButton:hover {
   background-color: rgb(10, 133, 10);
   color: rgb(255, 255, 255);
 }
