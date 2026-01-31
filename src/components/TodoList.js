@@ -7,7 +7,7 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TodoCard from "./TodoCard.js";
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from "react";
@@ -27,12 +27,15 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function TodoList() {
   const { todos, setTodos } = useContext(TodosConetext)
   const [addTaskTitle, setAddTaskTitle] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // حالة جديدة لمعرفة ما إذا كان التحميل انتهى
 
-  let todo = todos.map((item) => {
-    return (
-      <TodoCard key={item.id} todo={item} />
-    );
-  });
+  // USE EFFECT
+  useEffect(() => {
+    const storageTodos = JSON.parse(localStorage.getItem("todos"))
+    setTodos(storageTodos || [])
+    setIsLoading(false); // انتهى التحميل
+  }, [])
+  // ==== USE EFFECT ====
 
   // Handle Click Add Button
   function handleClickAddButton() {
@@ -43,11 +46,41 @@ export default function TodoList() {
       isCompleted: false,
     };
 
-    setTodos([...todos, newTodo]);
+    const updatedTodos = [...todos, newTodo]
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos))
     setAddTaskTitle("");
   }
   // ==== Handle Click Add Button ====
 
+  // عرض المحتوى بناءً على حالة التحميل ووجود المهام
+  const renderTodos = () => {
+    // إذا كان التحميل لا يزال جارياً
+    if (isLoading) {
+      return <p className="loading-message">جاري التحميل...</p>;
+    }
+
+    // إذا انتهى التحميل ولا توجد مهام
+    if (!todos || todos.length === 0) {
+      return (
+        <div className="empty-list-message">
+          <p style={{ textAlign: "center", fontSize: "18px", color: "#666" }}>
+            القائمة فارغة
+          </p>
+          <p style={{ textAlign: "center", fontSize: "14px", color: "#888" }}>
+            ابدأ بإضافة مهمة جديدة
+          </p>
+        </div>
+      );
+    }
+
+    // إذا كانت هناك مهام، اعرضها
+    return todos.map((item) => {
+      return (
+        <TodoCard key={item.id} todo={item} />
+      );
+    });
+  };
 
   return (
     <>
@@ -63,19 +96,19 @@ export default function TodoList() {
           divider={<Divider orientation="vertical" flexItem />}
           spacing={1}
         >
-          <Link className="link" to="/">
+          <Link className="link" to="/notcompleted">
             <Item sx={{ fontSize: "18px" }} className="navItemText">
               غير منجز
             </Item>
           </Link>
 
-          <Link className="link" to="">
+          <Link className="link" to="/completed">
             <Item sx={{ fontSize: "18px" }} className="navItemText">
               منجز
             </Item>
           </Link>
 
-          <Link className="link" to="">
+          <Link className="link" to="/">
             <Item sx={{ fontSize: "18px" }} className="navItemText">
               الكل
             </Item>
@@ -85,7 +118,7 @@ export default function TodoList() {
       {/* ===== NAV BAR ===== */}
 
       {/* TODOS */}
-      <div>{todo}</div>
+      <div>{renderTodos()}</div>
       {/* ===== TODOS ===== */}
 
       {/* INPUT + ADD BUTTON BOX */}
@@ -97,6 +130,10 @@ export default function TodoList() {
         className="boxInput"
         onSubmit={(event) => {
           event.preventDefault();
+          // يمكنك أيضاً التحقق هنا قبل الإضافة
+          if (addTaskTitle.trim()) {
+            handleClickAddButton();
+          }
         }}
       >
         <TextField
@@ -108,9 +145,24 @@ export default function TodoList() {
           onChange={(event) => {
             setAddTaskTitle(event.target.value);
           }}
+          onKeyPress={(event) => {
+            // إضافة المهمة عند الضغط على Enter
+            if (event.key === 'Enter' && addTaskTitle.trim()) {
+              event.preventDefault();
+              handleClickAddButton();
+            }
+          }}
         />
 
-        <button onClick={handleClickAddButton} className="addButton">
+        <button
+          onClick={handleClickAddButton}
+          className="addButton"
+          disabled={!addTaskTitle.trim()} // تعطيل الزر إذا كان الحقل فارغاً
+          style={{
+            opacity: !addTaskTitle.trim() ? 0.5 : 1,
+            cursor: !addTaskTitle.trim() ? 'not-allowed' : 'pointer'
+          }}
+        >
           إضافة
         </button>
       </Box>

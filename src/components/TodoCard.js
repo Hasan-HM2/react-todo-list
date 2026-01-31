@@ -4,12 +4,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
-import { useContext } from "react";
 import { TodosConetext } from "../context/todosContext.js";
-
-import Container from "@mui/material/Container";
 
 // MODAL
 import * as React from 'react';
@@ -58,9 +55,11 @@ const TodoCard = ({ todo }) => {
   // DELETE FUNCTION
   function handleDeleteConfirm(id) {
     let newTodos = todos.filter((item) => {
-      return item.id != todo.id
+      return item.id !== todo.id
     })
     setTodos(newTodos)
+    localStorage.setItem("todos", JSON.stringify(newTodos))
+
   }
   // ==== DELETE FUNCTION ====
 
@@ -74,6 +73,8 @@ const TodoCard = ({ todo }) => {
       return item
     })
     setTodos(updatedTodos)
+    localStorage.setItem("todos", JSON.stringify(updatedTodos))
+
   }
   // ==== HANDLE CHECK CLICK FUNCTION ====
 
@@ -87,6 +88,8 @@ const TodoCard = ({ todo }) => {
       } else return item
     })
     setTodos(updatedTodos)
+    localStorage.setItem("todos", JSON.stringify(updatedTodos))
+
     setOpenEdit(false)
   }
   // ==== HANDLE EDIT CONFIRM ====
