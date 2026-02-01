@@ -1,8 +1,5 @@
-import { Link } from "react-router-dom";
 import "../App.css";
 import "../styles/AddTaskInput.css";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -13,21 +10,15 @@ import { v4 as uuidv4 } from "uuid";
 import { useContext } from "react";
 import { TodosConetext } from "../context/todosContext.js";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: (theme.vars ?? theme).palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
+// TOGGLE BUTTONS
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 export default function TodoList() {
   const { todos, setTodos } = useContext(TodosConetext)
   const [addTaskTitle, setAddTaskTitle] = useState("");
   const [isLoading, setIsLoading] = useState(true); // حالة جديدة لمعرفة ما إذا كان التحميل انتهى
+  const [displayedTodosType, setDisplyedTodosType] = useState("all")
 
   // USE EFFECT
   useEffect(() => {
@@ -36,6 +27,23 @@ export default function TodoList() {
     setIsLoading(false); // انتهى التحميل
   }, [])
   // ==== USE EFFECT ====
+
+
+  // Filteration arrays
+  const complatedTodos = todos.filter((item) => {
+    if (item.isCompleted) {
+      return item
+    }
+    else return false
+  })
+
+  const notComplatedTodos = todos.filter((item) => {
+    if (!item.isCompleted) {
+      return item
+    }
+    else return false
+  })
+  // ==== Filteration arrays ====
 
   // Handle Click Add Button
   function handleClickAddButton() {
@@ -52,6 +60,7 @@ export default function TodoList() {
     setAddTaskTitle("");
   }
   // ==== Handle Click Add Button ====
+
 
   // عرض المحتوى بناءً على حالة التحميل ووجود المهام
   const renderTodos = () => {
@@ -74,13 +83,37 @@ export default function TodoList() {
       );
     }
 
+    if (displayedTodosType === 'not-completed') {
+      return notComplatedTodos.map((item) => {
+        return (
+          <TodoCard key={item.id} todo={item} />
+        )
+      })
+    }
+
+    else if (displayedTodosType === 'completed') {
+      return complatedTodos.map((item) => {
+        return (
+          <TodoCard key={item.id} todo={item} />
+        )
+      })
+    }
+
     // إذا كانت هناك مهام، اعرضها
     return todos.map((item) => {
       return (
         <TodoCard key={item.id} todo={item} />
       );
     });
+
+
   };
+
+  // change Displayed Type
+  function changeDisplayedType(event) {
+    setDisplyedTodosType(event.target.value)
+  }
+  // ==== change Displayed Type ====
 
   return (
     <>
@@ -90,35 +123,29 @@ export default function TodoList() {
         <hr />
       </div>
       <div className="flex">
-        <Stack
-          className="nav"
-          direction="row"
-          divider={<Divider orientation="vertical" flexItem />}
-          spacing={1}
+        <ToggleButtonGroup
+          value={displayedTodosType}
+          exclusive
+          onChange={changeDisplayedType}
+          aria-label="text alignment"
         >
-          <Link className="link" to="/notcompleted">
-            <Item sx={{ fontSize: "18px" }} className="navItemText">
-              غير منجز
-            </Item>
-          </Link>
+          <ToggleButton value="not-completed" className="toggleButtons">
+            غير منجز
+          </ToggleButton>
 
-          <Link className="link" to="/completed">
-            <Item sx={{ fontSize: "18px" }} className="navItemText">
-              منجز
-            </Item>
-          </Link>
+          <ToggleButton value="completed" className="toggleButtons">
+            المنجز
+          </ToggleButton>
 
-          <Link className="link" to="/">
-            <Item sx={{ fontSize: "18px" }} className="navItemText">
-              الكل
-            </Item>
-          </Link>
-        </Stack>
+          <ToggleButton value="all" className="toggleButtons">
+            الكل
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
       {/* ===== NAV BAR ===== */}
 
       {/* TODOS */}
-      <div>{renderTodos()}</div>
+      <div style={{maxHeight: '80vh', overflow:'scroll'}}>{renderTodos()}</div>
       {/* ===== TODOS ===== */}
 
       {/* INPUT + ADD BUTTON BOX */}

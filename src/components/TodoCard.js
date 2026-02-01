@@ -166,7 +166,7 @@ const TodoCard = ({ todo }) => {
 
       {/* ===== EDIT TODO MODAL ==== */}
 
-      <div className="one-card">
+      <div className="one-card" >
         <Grid container spacing={0}>
           <Grid
             size={4}
@@ -224,12 +224,13 @@ const TodoCard = ({ todo }) => {
             {/* ==== CHECK ICON BUTTON ==== */}
           </Grid>
 
-          <Grid size={8} className="right">
+          <Grid size={8} className="right" style={{direction:'rtl'}}> 
             <h2
               style={{
                 marginRight: "20px",
                 marginBottom: "0px",
                 fontSize: "28px",
+                textDecoration: todo.isCompleted ? "line-through" : 'none'
               }}
             >
               {todo.title}

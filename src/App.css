@@ -36,16 +36,14 @@ hr {
   text-decoration: none;
 }
 
-.navItemText {
-  transition: all 0.3s !important;
+.toggleButtons {
+  color: #0a3385 !important;
+}
+.toggleButtons:hover {
+  color: black !important;
 }
 
-.navItemText:hover {
-  background-color: #aaaaaa98 !important;
-}
-
-
-/* ==== Custon fonts ===== */
+/* Custon fonts */
 @font-face {
   font-family: Tajwal;
   src: url("/public/fonts/Tajawal-Black.ttf");

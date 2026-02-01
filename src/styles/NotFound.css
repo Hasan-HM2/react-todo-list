@@ -1,0 +1,16 @@
+button {
+  padding: 16px;
+  color: aquamarine;
+  background-color: #2d13de;
+  cursor: pointer;
+  font-size: 23px;
+  border: none;
+  border-radius: 8px;
+  font-family: Tajwal !important;
+  transition: 0.2s ;
+}
+
+button:hover {
+  background-color: #150070;
+  color: rgb(255, 255, 255);
+}
