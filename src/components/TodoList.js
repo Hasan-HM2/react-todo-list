@@ -1,7 +1,5 @@
 import "../App.css";
 import "../styles/AddTaskInput.css";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useState, useEffect } from "react";
