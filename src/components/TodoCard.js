@@ -169,9 +169,8 @@ const TodoCard = ({ todo }) => {
       <div className="one-card" >
         <Grid container spacing={0}>
           <Grid
-            size={{ xs: 12, sm: 4 }}
+            size={4}
             display="flex"
-            flexDirection={{ xs: "row", sm: "row" }}
             justifyContent="space-around"
             alignItems={"center"}
             sx={{ marginTop: { xs: 2, sm: 0 } }}
