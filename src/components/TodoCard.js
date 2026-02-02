@@ -94,6 +94,19 @@ const TodoCard = ({ todo }) => {
   }
   // ==== HANDLE EDIT CONFIRM ====
 
+  // ADE DATE FUNCTION
+  function addDate() {
+    let date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    let addingDate = `${year}/${day}/${month}`;
+    return addingDate
+  }
+  // ==== ADE DATE FUNCTION ====
+
   return (
     <div className="task-card-container">
 
@@ -248,6 +261,10 @@ const TodoCard = ({ todo }) => {
             >
               {todo.details}
             </h5>
+
+            <div className="addTodoDate">
+              <p>تاريخ الإضافة: {addDate()}</p>
+            </div>
           </Grid>
         </Grid>
       </div>

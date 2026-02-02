@@ -32,9 +32,10 @@
 
 @media (max-width: 420px) {
   .iconButton {
-    padding: 5px !important; /* تصغير الحشوة الداخلية */
-    min-width: 35px !important; /* تقليل أصغر عرض مسموح */
+    padding: 5px !important; 
+    width: 35px !important; 
     height: 35px !important;
+    font-size: 2px !important;
   }
   
   .iconButton {
@@ -81,4 +82,10 @@
 .cancelDeleteBtn:hover {
 background-color: rgba(83, 83, 83, 0.068);
 color: black !important;
+}
+
+.addTodoDate {
+  color: gold;
+  font-size: 14px;
+  margin-right: 5px;
 }
