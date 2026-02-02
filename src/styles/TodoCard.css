@@ -21,11 +21,25 @@
 
 .iconButton {
   transition: all 0.3s !important;
+  flex-shrink: 1; 
+  margin: 0 4px;
 }
 
 .iconButton:hover {
   background-color: rgba(187, 187, 187, 0.925) !important;
   box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.801) !important;
+}
+
+@media (max-width: 400px) {
+  .iconButton {
+    padding: 5px !important; /* تصغير الحشوة الداخلية */
+    min-width: 35px !important; /* تقليل أصغر عرض مسموح */
+    height: 35px !important;
+  }
+  
+  .iconButton svg {
+    font-size: 1.2rem; /* تصغير حجم الأيقونة نفسها */
+  }
 }
 
 .confirmEditBtn:hover{
