@@ -225,7 +225,7 @@ const TodoCard = ({ todo }) => {
             {/* ==== CHECK ICON BUTTON ==== */}
           </Grid>
 
-          <Grid size={8} className="right" style={{direction:'rtl'}}> 
+          <Grid size={8} className="right" style={{ direction: 'rtl' }}>
             <h2
               style={{
                 marginRight: "20px",
@@ -233,15 +233,18 @@ const TodoCard = ({ todo }) => {
                 fontSize: "28px",
                 textDecoration: todo.isCompleted ? "line-through" : 'none'
               }}
+              className="todoCardTextH2"
             >
               {todo.title}
             </h2>
+
             <h5
               style={{
                 marginRight: "20px",
                 marginTop: "1px",
                 fontWeight: "normal",
               }}
+              className="todoCardTextH5"
             >
               {todo.details}
             </h5>
