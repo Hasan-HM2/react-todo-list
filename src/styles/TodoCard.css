@@ -49,6 +49,10 @@
   .todoCardTextH2 {
     font-size: 24px !important;
   }
+
+  .addTodoDate {
+    font-size: 10px !important;
+  }
 }
 
 .confirmEditBtn:hover{
