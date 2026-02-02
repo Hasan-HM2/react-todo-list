@@ -43,6 +43,24 @@ export default function TodoList() {
   })
   // ==== Filteration arrays ====
 
+  // ADE DATE FUNCTION
+  function getCurrentDateTime() {
+    let date = new Date();
+
+    function formatTwoDigits(number) {
+      return number < 10 ? '0' + number : number;
+    }
+
+    let day = formatTwoDigits(date.getDate());
+    let month = formatTwoDigits(date.getMonth() + 1);
+    let year = date.getFullYear();
+    let hours = formatTwoDigits(date.getHours());
+    let minutes = formatTwoDigits(date.getMinutes());
+
+    return `${year}/${month}/${day} || ${hours}:${minutes}`;
+  }
+  // ==== ADE DATE FUNCTION ====
+
   // Handle Click Add Button
   function handleClickAddButton() {
     let newTodo = {
@@ -50,6 +68,7 @@ export default function TodoList() {
       title: addTaskTitle,
       details: "",
       isCompleted: false,
+      createdAt: getCurrentDateTime()
     };
 
     const updatedTodos = [...todos, newTodo]
@@ -143,7 +162,7 @@ export default function TodoList() {
       {/* ===== NAV BAR ===== */}
 
       {/* TODOS */}
-      <div style={{maxHeight: '80vh', overflow:'scroll'}}>{renderTodos()}</div>
+      <div style={{ maxHeight: '80vh', overflow: 'scroll' }}>{renderTodos()}</div>
       {/* ===== TODOS ===== */}
 
       {/* INPUT + ADD BUTTON BOX */}
