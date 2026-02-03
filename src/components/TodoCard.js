@@ -19,36 +19,27 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 
 const TodoCard = ({ todo }) => {
-  const [open, setOpen] = React.useState(false);
-  const [openEdit, setOpenEdit] = React.useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
   const [editedTodo, setEditedTodo] = useState({ title: todo.title, details: todo.details })
 
   const { todos, setTodos } = useContext(TodosConetext)
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenDelete = () => {
+    setOpenDelete(true);
   };
 
   const handleClickOpenEdit = () => {
     setOpenEdit(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
   };
 
   const handleCloseEdit = () => {
     setOpenEdit(false);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
   };
 
 
@@ -101,8 +92,8 @@ const TodoCard = ({ todo }) => {
 
       {/* DELETE TODO MODAL */}
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openDelete}
+        onClose={handleCloseDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         style={{ direction: 'rtl' }}
@@ -116,7 +107,7 @@ const TodoCard = ({ todo }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} className="cancelDeleteBtn">إلغاء</Button>
+          <Button onClick={handleCloseDelete} className="cancelDeleteBtn">إلغاء</Button>
           <Button onClick={() => { handleDeleteConfirm(todo.id) }} className="confirmDeleteBtn">
             تأكيد الحذف
           </Button>
@@ -129,7 +120,7 @@ const TodoCard = ({ todo }) => {
       <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth sx={{ direction: 'rtl' }}>
         <DialogTitle sx={{ fontSize: '28px', marginBottom: '-16px' }}>تعديل عنوان المهمة</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit} id="subscription-form">
+          <form id="subscription-form">
             <TextField
               autoFocus
               required
@@ -145,7 +136,7 @@ const TodoCard = ({ todo }) => {
         </DialogContent>
         <DialogTitle sx={{ marginBottom: '-16px', marginTop: '20px', }}>تعديل تفاصيل المهمة</DialogTitle>
         <DialogContent sx={{ marginTop: '0px' }}>
-          <form onSubmit={handleSubmit} id="subscription-form">
+          <form id="subscription-form">
             <TextField
               required
               id="name"
@@ -187,7 +178,7 @@ const TodoCard = ({ todo }) => {
                 background: "white",
                 border: "solid #78290f 2px",
               }}
-              onClick={handleClickOpen}
+              onClick={handleClickOpenDelete}
             >
               <DeleteIcon />
             </IconButton>
