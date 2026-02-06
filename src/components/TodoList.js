@@ -12,17 +12,50 @@ import { TodosConetext } from "../context/todosContext.js";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
+// MODAL
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 export default function TodoList() {
   const { todos, setTodos } = useContext(TodosConetext)
   const [addTaskTitle, setAddTaskTitle] = useState("");
   const [isLoading, setIsLoading] = useState(true); // حالة جديدة لمعرفة ما إذا كان التحميل انتهى
   const [displayedTodosType, setDisplyedTodosType] = useState("all")
+  const [openDelete, setOpenDelete] = useState(false);
+  const [dialogTodo, setDialogTodo] = useState(null)
+  
+
+    const handleOpenDelete = (todo) => {
+    setDialogTodo(todo)
+    setOpenDelete(true);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+  
+  
+    // DELETE FUNCTION
+  function handleDeleteConfirm() {
+    let newTodos = todos.filter((item) => {
+      return item.id !== dialogTodo.id
+    })
+    setTodos(newTodos)
+    localStorage.setItem("todos", JSON.stringify(newTodos))
+    setOpenDelete(false)
+  }
+  // ==== DELETE FUNCTION ====
+
 
   // USE EFFECT
   useEffect(() => {
     const storageTodos = JSON.parse(localStorage.getItem("todos"))
     setTodos(storageTodos || [])
-    setIsLoading(false); // انتهى التحميل
+    setIsLoading(false);
   }, [])
   // ==== USE EFFECT ====
 
@@ -103,7 +136,7 @@ export default function TodoList() {
     if (displayedTodosType === 'not-completed') {
       return notComplatedTodos.map((item) => {
         return (
-          <TodoCard key={item.id} todo={item} />
+          <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete} />
         )
       })
     }
@@ -111,7 +144,7 @@ export default function TodoList() {
     else if (displayedTodosType === 'completed') {
       return complatedTodos.map((item) => {
         return (
-          <TodoCard key={item.id} todo={item} />
+          <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete}/>
         )
       })
     }
@@ -119,7 +152,7 @@ export default function TodoList() {
     // إذا كانت هناك مهام، اعرضها
     return todos.map((item) => {
       return (
-        <TodoCard key={item.id} todo={item} />
+        <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete} />
       );
     });
 
@@ -134,6 +167,31 @@ export default function TodoList() {
 
   return (
     <>
+          {/* DELETE TODO MODAL */}
+          <Dialog
+            open={openDelete}
+            onClose={handleCloseDelete}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            style={{ direction: 'rtl' }}
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"هل تريد الحذف بالتأكيد؟"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                لا يمكنك التراجع في حال تم تأكيد الحذف
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDelete} className="cancelDeleteBtn">إلغاء</Button>
+              <Button onClick={handleDeleteConfirm} className="confirmDeleteBtn">
+                تأكيد الحذف
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {/* ==== DELETE TODO MODAL ==== */}
+
       {/* NAV BAR */}
       <div className="div-title">
         <h1>مهامي</h1>

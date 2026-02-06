@@ -9,50 +9,32 @@ import { useState, useContext } from "react";
 import { TodosConetext } from "../context/todosContext.js";
 
 // MODAL
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 
-const TodoCard = ({ todo }) => {
-  const [openDelete, setOpenDelete] = useState(false);
+const TodoCard = ({ todo, handleClickOpenDelete }) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
   const [editedTodo, setEditedTodo] = useState({ title: todo.title, details: todo.details })
 
   const { todos, setTodos } = useContext(TodosConetext)
 
-  const handleClickOpenDelete = () => {
-    setOpenDelete(true);
-  };
+  function openDelete() {
+    handleClickOpenDelete(todo)
+  }
 
   const handleClickOpenEdit = () => {
     setOpenEdit(true);
-  };
-
-  const handleCloseDelete = () => {
-    setOpenDelete(false);
   };
 
   const handleCloseEdit = () => {
     setOpenEdit(false);
   };
 
-
-  // DELETE FUNCTION
-  function handleDeleteConfirm(id) {
-    let newTodos = todos.filter((item) => {
-      return item.id !== todo.id
-    })
-    setTodos(newTodos)
-    localStorage.setItem("todos", JSON.stringify(newTodos))
-
-  }
-  // ==== DELETE FUNCTION ====
 
 
   // HANDLE CHECK CLICK FUNCTION
@@ -85,35 +67,8 @@ const TodoCard = ({ todo }) => {
   }
   // ==== HANDLE EDIT CONFIRM ====
 
-
-
   return (
     <div className="task-card-container">
-
-      {/* DELETE TODO MODAL */}
-      <Dialog
-        open={openDelete}
-        onClose={handleCloseDelete}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        style={{ direction: 'rtl' }}
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"هل تريد الحذف بالتأكيد؟"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            لا يمكنك التراجع في حال تم تأكيد الحذف
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDelete} className="cancelDeleteBtn">إلغاء</Button>
-          <Button onClick={() => { handleDeleteConfirm(todo.id) }} className="confirmDeleteBtn">
-            تأكيد الحذف
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* ==== DELETE TODO MODAL ==== */}
 
 
       {/* EDIT TODO MODAL */}
@@ -178,7 +133,7 @@ const TodoCard = ({ todo }) => {
                 background: "white",
                 border: "solid #78290f 2px",
               }}
-              onClick={handleClickOpenDelete}
+              onClick={openDelete}
             >
               <DeleteIcon />
             </IconButton>
