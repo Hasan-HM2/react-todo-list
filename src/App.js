@@ -21,7 +21,6 @@ function App() {
         <Container maxWidth="sm" className="container">
           <TodosConetext.Provider value={{ todos, setTodos }}>
             <TodoList />
-            {/* <TodoList /> */}
           </TodosConetext.Provider>
         </Container>
       </div>

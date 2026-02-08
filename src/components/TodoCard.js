@@ -8,18 +8,8 @@ import { useState, useContext } from "react";
 
 import { TodosConetext } from "../context/todosContext.js";
 
-// MODAL
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-
-const TodoCard = ({ todo, handleClickOpenDelete }) => {
-  const [openEdit, setOpenEdit] = useState(false);
+const TodoCard = ({ todo, handleClickOpenDelete, handleClickOpenEdit }) => {
   const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
-  const [editedTodo, setEditedTodo] = useState({ title: todo.title, details: todo.details })
 
   const { todos, setTodos } = useContext(TodosConetext)
 
@@ -27,15 +17,9 @@ const TodoCard = ({ todo, handleClickOpenDelete }) => {
     handleClickOpenDelete(todo)
   }
 
-  const handleClickOpenEdit = () => {
-    setOpenEdit(true);
+  const openEdit = () => {
+    handleClickOpenEdit(todo);
   };
-
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-  };
-
-
 
   // HANDLE CHECK CLICK FUNCTION
   function handleCheckClick() {
@@ -51,69 +35,8 @@ const TodoCard = ({ todo, handleClickOpenDelete }) => {
   }
   // ==== HANDLE CHECK CLICK FUNCTION ====
 
-  // HANDLE EDIT CONFIRM
-  function handleEditConfirm() {
-    const updatedTodos = todos.map((item) => {
-      if (item.id === todo.id) {
-        return (
-          { ...item, title: editedTodo.title, details: editedTodo.details }
-        )
-      } else return item
-    })
-    setTodos(updatedTodos)
-    localStorage.setItem("todos", JSON.stringify(updatedTodos))
-
-    setOpenEdit(false)
-  }
-  // ==== HANDLE EDIT CONFIRM ====
-
   return (
     <div className="task-card-container">
-
-
-      {/* EDIT TODO MODAL */}
-      <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth sx={{ direction: 'rtl' }}>
-        <DialogTitle sx={{ fontSize: '28px', marginBottom: '-16px' }}>تعديل عنوان المهمة</DialogTitle>
-        <DialogContent>
-          <form id="subscription-form">
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="text"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={editedTodo.title}
-              onChange={(e) => { setEditedTodo({ ...editedTodo, title: e.target.value }) }}
-            />
-          </form>
-        </DialogContent>
-        <DialogTitle sx={{ marginBottom: '-16px', marginTop: '20px', }}>تعديل تفاصيل المهمة</DialogTitle>
-        <DialogContent sx={{ marginTop: '0px' }}>
-          <form id="subscription-form">
-            <TextField
-              required
-              id="name"
-              name="text"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={editedTodo.details}
-              onChange={(e) => { setEditedTodo({ ...editedTodo, details: e.target.value }) }}
-            />
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseEdit} variant="outlined" sx={{ marginLeft: '20px' }} className="cancelEditBtn">إلغاء</Button>
-          <Button autoFocus variant="contained" className="confirmEditBtn" onClick={handleEditConfirm}>
-            حفظ التعديل
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* ===== EDIT TODO MODAL ==== */}
-
       <div className="one-card" >
         <Grid container spacing={0}>
           <Grid
@@ -123,7 +46,6 @@ const TodoCard = ({ todo, handleClickOpenDelete }) => {
             alignItems={"center"}
             sx={{ marginTop: { xs: 2, sm: 0 } }}
           >
-
             {/* DELETE BUTTON */}
             <IconButton
               className="iconButton"
@@ -141,7 +63,7 @@ const TodoCard = ({ todo, handleClickOpenDelete }) => {
 
             {/* EDIT BUTTON */}
             <IconButton
-              onClick={handleClickOpenEdit}
+              onClick={openEdit}
               className="iconButton"
               aria-label="delete"
               style={{

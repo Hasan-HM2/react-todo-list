@@ -27,19 +27,32 @@ export default function TodoList() {
   const [displayedTodosType, setDisplyedTodosType] = useState("all")
   const [openDelete, setOpenDelete] = useState(false);
   const [dialogTodo, setDialogTodo] = useState(null)
-  
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editedTodo, setEditedTodo] = useState({ title: "", details: '' })
 
-    const handleOpenDelete = (todo) => {
+  const handleOpenDelete = (todo) => {
     setDialogTodo(todo)
     setOpenDelete(true);
   };
 
+  const handleOpenEdit = (todo) => {
+    setDialogTodo(todo)
+    setEditedTodo({ title: todo.title, details: todo.details })
+    setOpenEdit(true);
+
+  };
+
+
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
-  
-  
-    // DELETE FUNCTION
+
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  // DELETE FUNCTION
   function handleDeleteConfirm() {
     let newTodos = todos.filter((item) => {
       return item.id !== dialogTodo.id
@@ -111,6 +124,23 @@ export default function TodoList() {
   }
   // ==== Handle Click Add Button ====
 
+  // HANDLE EDIT CONFIRM
+  function handleEditConfirm() {
+    const updatedTodos = todos.map((item) => {
+      if (item.id === dialogTodo.id) {
+        setDialogTodo({ ...item, title: item.title, details: item.details })
+        return (
+          { ...item, title: editedTodo.title, details: editedTodo.details }
+        )
+      } else return item
+    })
+    setTodos(updatedTodos)
+    localStorage.setItem("todos", JSON.stringify(updatedTodos))
+
+    setOpenEdit(false)
+  }
+  // ==== HANDLE EDIT CONFIRM ====
+
 
   // عرض المحتوى بناءً على حالة التحميل ووجود المهام
   const renderTodos = () => {
@@ -136,7 +166,7 @@ export default function TodoList() {
     if (displayedTodosType === 'not-completed') {
       return notComplatedTodos.map((item) => {
         return (
-          <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete} />
+          <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete} handleClickOpenEdit={handleOpenEdit} />
         )
       })
     }
@@ -144,7 +174,7 @@ export default function TodoList() {
     else if (displayedTodosType === 'completed') {
       return complatedTodos.map((item) => {
         return (
-          <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete}/>
+          <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete} handleClickOpenEdit={handleOpenEdit} />
         )
       })
     }
@@ -152,11 +182,9 @@ export default function TodoList() {
     // إذا كانت هناك مهام، اعرضها
     return todos.map((item) => {
       return (
-        <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete} />
+        <TodoCard key={item.id} todo={item} handleClickOpenDelete={handleOpenDelete} handleClickOpenEdit={handleOpenEdit} />
       );
     });
-
-
   };
 
   // change Displayed Type
@@ -164,33 +192,76 @@ export default function TodoList() {
     setDisplyedTodosType(event.target.value)
   }
   // ==== change Displayed Type ====
+  console.log(editedTodo.title);
 
   return (
     <>
-          {/* DELETE TODO MODAL */}
-          <Dialog
-            open={openDelete}
-            onClose={handleCloseDelete}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            style={{ direction: 'rtl' }}
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"هل تريد الحذف بالتأكيد؟"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                لا يمكنك التراجع في حال تم تأكيد الحذف
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDelete} className="cancelDeleteBtn">إلغاء</Button>
-              <Button onClick={handleDeleteConfirm} className="confirmDeleteBtn">
-                تأكيد الحذف
-              </Button>
-            </DialogActions>
-          </Dialog>
-          {/* ==== DELETE TODO MODAL ==== */}
+      {/* DELETE TODO MODAL */}
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        style={{ direction: 'rtl' }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"هل تريد الحذف بالتأكيد؟"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            لا يمكنك التراجع في حال تم تأكيد الحذف
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} className="cancelDeleteBtn">إلغاء</Button>
+          <Button onClick={handleDeleteConfirm} className="confirmDeleteBtn">
+            تأكيد الحذف
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* ==== DELETE TODO MODAL ==== */}
+
+      {/* EDIT TODO MODAL */}
+      <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth sx={{ direction: 'rtl' }}>
+        <DialogTitle sx={{ fontSize: '28px', marginBottom: '-16px' }}>تعديل عنوان المهمة</DialogTitle>
+        <DialogContent>
+          <form id="subscription-form">
+            <TextField
+              autoFocus
+              required
+              id="name"
+              name="text"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={editedTodo.title}
+              onChange={(e) => { setEditedTodo({ ...editedTodo, title: e.target.value }) }}
+            />
+          </form>
+        </DialogContent>
+        <DialogTitle sx={{ marginBottom: '-16px', marginTop: '20px', }}>تعديل تفاصيل المهمة</DialogTitle>
+        <DialogContent sx={{ marginTop: '0px' }}>
+          <form id="subscription-form">
+            <TextField
+              required
+              id="name"
+              name="text"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={editedTodo.details}
+              onChange={(e) => { setEditedTodo({ ...editedTodo, details: e.target.value }) }}
+            />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEdit} variant="outlined" sx={{ marginLeft: '20px' }} className="cancelEditBtn">إلغاء</Button>
+          <Button autoFocus variant="contained" className="confirmEditBtn" onClick={handleEditConfirm}>
+            حفظ التعديل
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* ===== EDIT TODO MODAL ==== */}
 
       {/* NAV BAR */}
       <div className="div-title">
