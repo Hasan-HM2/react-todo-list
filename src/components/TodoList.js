@@ -2,6 +2,7 @@ import "../App.css";
 import "../styles/AddTaskInput.css";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import { ToastContext } from "../context/toastContext.js";
 import { useState, useEffect } from "react";
 import TodoCard from "./TodoCard.js";
 import { v4 as uuidv4 } from "uuid";
@@ -29,6 +30,8 @@ export default function TodoList() {
   const [dialogTodo, setDialogTodo] = useState(null)
   const [openEdit, setOpenEdit] = useState(false);
   const [editedTodo, setEditedTodo] = useState({ title: "", details: '' })
+  const { showHideToast } = useContext(ToastContext)
+
 
   const handleOpenDelete = (todo) => {
     setDialogTodo(todo)
@@ -59,6 +62,7 @@ export default function TodoList() {
     })
     setTodos(newTodos)
     localStorage.setItem("todos", JSON.stringify(newTodos))
+    showHideToast("تم الحذف بنجاح")
     setOpenDelete(false)
   }
   // ==== DELETE FUNCTION ====
@@ -121,6 +125,7 @@ export default function TodoList() {
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos))
     setAddTaskTitle("");
+    showHideToast("تمت الإضافة بنجاح")
   }
   // ==== Handle Click Add Button ====
 
@@ -136,7 +141,7 @@ export default function TodoList() {
     })
     setTodos(updatedTodos)
     localStorage.setItem("todos", JSON.stringify(updatedTodos))
-
+    showHideToast("تم التعديل بنجاح")
     setOpenEdit(false)
   }
   // ==== HANDLE EDIT CONFIRM ====
@@ -192,7 +197,7 @@ export default function TodoList() {
     setDisplyedTodosType(event.target.value)
   }
   // ==== change Displayed Type ====
-  console.log(editedTodo.title);
+
 
   return (
     <>

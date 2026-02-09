@@ -7,11 +7,12 @@ import Grid from "@mui/material/Grid";
 import { useState, useContext } from "react";
 
 import { TodosConetext } from "../context/todosContext.js";
+import { ToastContext } from "../context/toastContext.js";
 
 const TodoCard = ({ todo, handleClickOpenDelete, handleClickOpenEdit }) => {
   const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
-
   const { todos, setTodos } = useContext(TodosConetext)
+  const { showHideToast } = useContext(ToastContext)
 
   function openDelete() {
     handleClickOpenDelete(todo)
@@ -29,6 +30,12 @@ const TodoCard = ({ todo, handleClickOpenDelete, handleClickOpenEdit }) => {
       }
       return item
     })
+    if (!completeStatus) {
+      showHideToast("تمت الإضافة إلى المهام المنجزة")
+    }
+    else {
+      showHideToast("تمت الإضافة إلى المهام غير المنجزة")
+    }
     setTodos(updatedTodos)
     localStorage.setItem("todos", JSON.stringify(updatedTodos))
 
