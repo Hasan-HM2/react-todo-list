@@ -7,12 +7,12 @@ import Grid from "@mui/material/Grid";
 import { useState, useContext } from "react";
 
 import { TodosConetext } from "../context/todosContext.js";
-import { ToastContext } from "../context/toastContext.js";
+import { useToast } from "../context/toastContext.js";
 
 const TodoCard = ({ todo, handleClickOpenDelete, handleClickOpenEdit }) => {
   const [completeStatus, setCompleteStatue] = useState(todo.isCompleted);
   const { todos, setTodos } = useContext(TodosConetext)
-  const { showHideToast } = useContext(ToastContext)
+  const { showHideToast } = useToast()
 
   function openDelete() {
     handleClickOpenDelete(todo)

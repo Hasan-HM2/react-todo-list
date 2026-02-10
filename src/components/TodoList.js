@@ -2,8 +2,8 @@ import "../App.css";
 import "../styles/AddTaskInput.css";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { ToastContext } from "../context/toastContext.js";
-import { useState, useEffect } from "react";
+import { useToast } from "../context/toastContext.js";
+import { useState, useEffect, useMemo } from "react";
 import TodoCard from "./TodoCard.js";
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from "react";
@@ -30,7 +30,7 @@ export default function TodoList() {
   const [dialogTodo, setDialogTodo] = useState(null)
   const [openEdit, setOpenEdit] = useState(false);
   const [editedTodo, setEditedTodo] = useState({ title: "", details: '' })
-  const { showHideToast } = useContext(ToastContext)
+  const { showHideToast } = useToast()
 
 
   const handleOpenDelete = (todo) => {
@@ -76,21 +76,22 @@ export default function TodoList() {
   }, [])
   // ==== USE EFFECT ====
 
-
   // Filteration arrays
-  const complatedTodos = todos.filter((item) => {
-    if (item.isCompleted) {
-      return item
-    }
-    else return false
+  const complatedTodos = useMemo(() => {
+    return (
+      todos.filter((item) => {
+        return item.isCompleted
+      }))
   })
 
-  const notComplatedTodos = todos.filter((item) => {
-    if (!item.isCompleted) {
-      return item
-    }
-    else return false
+
+  const notComplatedTodos = useMemo(() => {
+    return (
+    todos.filter((item) => {
+      return !item.isCompleted
+    }))
   })
+
   // ==== Filteration arrays ====
 
   // ADE DATE FUNCTION
