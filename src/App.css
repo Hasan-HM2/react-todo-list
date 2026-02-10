@@ -68,3 +68,9 @@ hr {
   font-weight: bold;
 }
 /* ==== //Custon fonts// ===== */
+
+@media (max-width: 420px) {
+  .todosClass {
+    height: 20vh;
+  }
+}

@@ -297,7 +297,7 @@ export default function TodoList() {
       {/* ===== NAV BAR ===== */}
 
       {/* TODOS */}
-      <div style={{ maxHeight: '60vh', overflow: 'scroll' }}>{renderTodos()}</div>
+      <div className="todosClass" style={{ maxHeight: '60vh', overflow: 'scroll' }}>{renderTodos()}</div>
       {/* ===== TODOS ===== */}
 
       {/* INPUT + ADD BUTTON BOX */}
